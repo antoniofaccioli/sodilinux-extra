@@ -343,7 +343,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
        
     def install_google(self, package, version):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto installando, attendi")
+        window = self.open_window("Sto installando, attendi")
         self.check_connection()
         self.change_state_button('disabled')
         self.change_label(3, 'normal', 'black')
@@ -360,6 +360,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
                     "earth32":"/etc/apt/sources.list.d/google-earth.list"
                     }
 
+        
         proc = subprocess.Popen('wget ' + link_key + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo ' + self.psw + ' | sudo -S apt-key add ' + self.download_directory + '/linux_signing_key.pub', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
@@ -374,20 +375,20 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         proc = subprocess.Popen('echo ' + self.psw + ' | sudo -S apt-get --assume-yes install -f', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
 
     def uninstall_deb(self, package):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto disinstallando, attendi")
+        window = self.open_window("Sto disinstallando, attendi")
         proc = subprocess.Popen('echo '+ self.psw + ' | sudo -S sudo apt-get --assume-yes remove ' + package, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
 
     def install_dpkg(self, package):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto installando, attendi")
+        window = window = self.open_window("Sto installando, attendi")
         self.check_connection()
         self.change_state_button('disabled')
         self.change_label(3, 'normal', 'black')
@@ -403,60 +404,64 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
                     'adobeair32':'adobeair_2.6.0.2_i386.deb',
                     'adobeair64':'adobeair_2.6.0.2_amd64.deb'
                     }
-        proc = subprocess.Popen('wget ' + link_get[package] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+
+        if os.path.exists(self.download_directory + '/' + package_name[package]) == False:
+            proc = subprocess.Popen('wget ' + link_get[package] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw + ' | sudo -S dpkg -i ' + self.download_directory + '/' + package_name[package], shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw + ' | sudo -S apt-get --assume-yes -f install', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
 
     def install_pdfxchange(self):
         self.check_connection()
-        self.create_window("Sto installando PDF-exchange, attendi")
+        window = self.open_window("Sto installando PDF-exchange, attendi")
         self.change_state_button('disabled')
         self.change_label(3, 'normal', 'black')
         link_get = {'pdfxchange':'https://www.tracker-software.com/downloads/PDFXVwer.zip'}
-        proc = subprocess.Popen('wget ' + link_get['pdfxchange'] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+        if os.path.exists(self.download_directory + '/PDFXVwer.zip') == False:
+            proc = subprocess.Popen('wget ' + link_get['pdfxchange'] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         zip_ref = zipfile.ZipFile(self.download_directory + '/PDFXVwer.zip', 'r')
         zip_ref.extractall(self.download_directory)
         zip_ref.close()
         proc = subprocess.Popen('wine ' + self.download_directory + '/PDFXVwer.exe /VERYSILENT /NORESTART', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def uninstall_pdfxchange(self):
-        self.create_window("Sto disinstallando PDF-exchange, attendi")
+        window = self.open_window("Sto disinstallando PDF-exchange, attendi")
         pdfxchange = "~/.wine/drive_c/Program\ Files/Tracker\ Software/PDF\ Viewer/unins000.exe"
         proc = subprocess.Popen('wine ' + pdfxchange, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def install_vkaraoke(self):
         self.check_connection()
-        self.create_window("Sto installando vKaraoke, attendi")
+        window = self.open_window("Sto installando vKaraoke, attendi")
         self.change_state_button('disabled')
         link_get = {'vkaraoke':'http://www.vanbasco.com/downloads/vkaraoke.exe'}
-        proc = subprocess.Popen('wget ' + link_get['vkaraoke'] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+        if os.path.exists(self.download_directory + '/vkaraoke.exe') == False:
+            proc = subprocess.Popen('wget ' + link_get['vkaraoke'] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('wine ' + self.download_directory + '/vkaraoke.exe /VERYSILENT /NORESTART', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def uninstall_vkaraoke(self):
         self.change_label(6, 'normal', 'black')
-        self.create_window("Sto disinstallando vKaraoke, attendi")
+        window = self.open_window("Sto disinstallando vKaraoke, attendi")
         vkaraoke = "~/.wine/drive_c/Program\ Files\ \(x86\)/vanBasco's\ Karaoke\ Player/uninst.exe"
         proc = subprocess.Popen('wine ' + vkaraoke, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def install_fonts(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
         self.check_connection()
-        self.create_window("Sto installando il pacchetto font, attendi")
+        window = self.open_window("Sto installando il pacchetto font, attendi")
         self.change_state_button('disabled')
         proc = subprocess.Popen('apt-get install cabextract', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
@@ -473,11 +478,11 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install -f', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def uninstall_fonts(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto disinstallando il pacchetto font, attendi")
+        window = self.open_window("Sto disinstallando il pacchetto font, attendi")
         self.change_label(6, 'normal', 'black')
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes remove ttf-mscorefonts-installer', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
@@ -485,20 +490,20 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes remove fonts-crosextra-carlito', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def uninstall_scratch(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto disinstallando il pacchetto Scratch, attendi")
+        window = self.open_window("Sto disinstallando il pacchetto Scratch, attendi")
         self.change_label(6, 'normal', 'black')
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S rm -R /opt/adobe-air-sdk/', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def install_scratch(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
         self.check_connection()
-        self.create_window("Sto installando il pacchetto Scratch, attendi")
+        window = self.open_window("Sto installando il pacchetto Scratch, attendi")
         self.change_state_button('disabled')
         self.change_label(3, 'normal', 'black')
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install libgtk2.0-0:i386 libstdc++6:i386 libxml2:i386 libxslt1.1:i386 libcanberra-gtk-module:i386 gtk2-engines-murrine:i386 libqt4-qt3support:i386 libgnome-keyring0:i386 libnss-mdns:i386 libnss3:i386', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
@@ -507,13 +512,15 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S ln -s /usr/lib/i386-linux-gnu/libgnome-keyring.so.0.2.0 /usr/lib/libgnome-keyring.so.0.2.0', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        proc = subprocess.Popen('wget http://airdownload.adobe.com/air/lin/download/2.6/AdobeAIRSDK.tbz2 -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+        if os.path.exists(self.download_directory + '/AdobeAIRSDK.tbz2') == False:
+            proc = subprocess.Popen('wget http://airdownload.adobe.com/air/lin/download/2.6/AdobeAIRSDK.tbz2 -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S mkdir /opt/adobe-air-sdk', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S tar jxf ' + self.download_directory + '/AdobeAIRSDK.tbz2 -C /opt/adobe-air-sdk', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        proc = subprocess.Popen('wget https://aur.archlinux.org/cgit/aur.git/snapshot/adobe-air.tar.gz -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+        if os.path.exists(self.download_directory + '/adobe-air.tar.gz') == False:
+            proc = subprocess.Popen('wget https://aur.archlinux.org/cgit/aur.git/snapshot/adobe-air.tar.gz -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S tar xvf ' + self.download_directory + '/adobe-air.tar.gz -C /opt/adobe-air-sdk', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
@@ -521,11 +528,13 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S mkdir /opt/adobe-air-sdk/scratch', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        proc = subprocess.Popen('wget https://scratch.mit.edu/scratchr2/static/sa/Scratch-456.0.4.air -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+        if os.path.exists(self.download_directory + '/Scratch-456.0.4.air') == False:
+            proc = subprocess.Popen('wget https://scratch.mit.edu/scratchr2/static/sa/Scratch-456.0.4.air -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S cp ' + self.download_directory + '/Scratch-456.0.4.air /opt/adobe-air-sdk/scratch/Scratch.air', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        proc = subprocess.Popen('wget https://dl2.macupdate.com/images/icons128/25203.png -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
+        if os.path.exists(self.download_directory + '/25203.png') == False:
+            proc = subprocess.Popen('wget https://dl2.macupdate.com/images/icons128/25203.png -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S cp ' + self.download_directory + '/25203.png /opt/adobe-air-sdk/scratch/scratch.png', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
@@ -551,11 +560,11 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S cp ' + self.download_directory + '/Scratch2.desktop /usr/share/applications/Scratch2.desktop', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
 
-        self.w_alert.destroy()
+        self.close_window(window)
     
     def install_extra(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto installando il pacchetto Ubuntu-Extra, attendi")
+        window = self.open_window("Sto installando il pacchetto Ubuntu-Extra, attendi")
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install ubuntu-restricted-extras', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install libdvdnav4 libdvdread4 gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libdvd-pkg', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
@@ -564,32 +573,32 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install -f', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def uninstall_extra(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto disinstallando il pacchetto Ubuntu-Extra, attendi")
+        window = self.open_window("Sto disinstallando il pacchetto Ubuntu-Extra, attendi")
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes remove ubuntu-restricted-extras', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes remove libdvdnav4 libdvdread4 gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libdvd-pkg', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def install_cmap(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto installando CMAPS, attendi")
+        window = self.open_window("Sto installando CMAPS, attendi")
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install cmaptools-sodilinux', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes install -f', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
 
     def uninstall_cmap(self):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        self.create_window("Sto disinstallando CMAPS, attendi")
+        window = self.open_window("Sto disinstallando CMAPS, attendi")
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S apt-get --assume-yes remove cmaptools-sodilinux', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
-        self.w_alert.destroy()
+        self.close_window(window)
         
     #control architecture 32 or 64
     def query_arch(self):
@@ -629,16 +638,18 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
                 self.change_label(2, 'normal', 'red')
                 self.change_state_button('normal')
 
-    def create_window(self, message):
+    def open_window(self, message):
         w_alert = tk.Toplevel(self.main)
         w_alert.wm_title("Attenzione")
         l = tk.Label(w_alert, text=message)
         l.pack(side="top", fill="both", expand=True)
         return w_alert
 
+    def close_window(self, window):
+        window.destroy()
+        
     def start(self):
         self.main.mainloop()
 
 app = Main()
 app.start()
-
