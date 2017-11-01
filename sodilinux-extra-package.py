@@ -407,7 +407,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
 
         if os.path.exists(self.download_directory + '/' + package_name[package]) == False:
             proc = subprocess.Popen('wget ' + link_get[package] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         proc = subprocess.Popen('echo '+ self.psw + ' | sudo -S dpkg -i ' + self.download_directory + '/' + package_name[package], shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw + ' | sudo -S apt-get --assume-yes -f install', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
@@ -423,7 +423,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         link_get = {'pdfxchange':'https://www.tracker-software.com/downloads/PDFXVwer.zip'}
         if os.path.exists(self.download_directory + '/PDFXVwer.zip') == False:
             proc = subprocess.Popen('wget ' + link_get['pdfxchange'] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         zip_ref = zipfile.ZipFile(self.download_directory + '/PDFXVwer.zip', 'r')
         zip_ref.extractall(self.download_directory)
         zip_ref.close()
@@ -445,7 +445,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         link_get = {'vkaraoke':'http://www.vanbasco.com/downloads/vkaraoke.exe'}
         if os.path.exists(self.download_directory + '/vkaraoke.exe') == False:
             proc = subprocess.Popen('wget ' + link_get['vkaraoke'] + ' -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         proc = subprocess.Popen('wine ' + self.download_directory + '/vkaraoke.exe /VERYSILENT /NORESTART', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         self.close_window(window)
@@ -514,14 +514,14 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         if os.path.exists(self.download_directory + '/AdobeAIRSDK.tbz2') == False:
             proc = subprocess.Popen('wget http://airdownload.adobe.com/air/lin/download/2.6/AdobeAIRSDK.tbz2 -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S mkdir /opt/adobe-air-sdk', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S tar jxf ' + self.download_directory + '/AdobeAIRSDK.tbz2 -C /opt/adobe-air-sdk', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         if os.path.exists(self.download_directory + '/adobe-air.tar.gz') == False:
             proc = subprocess.Popen('wget https://aur.archlinux.org/cgit/aur.git/snapshot/adobe-air.tar.gz -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S tar xvf ' + self.download_directory + '/adobe-air.tar.gz -C /opt/adobe-air-sdk', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S chmod +x /opt/adobe-air-sdk/adobe-air/adobe-air', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
@@ -530,12 +530,12 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         proc.wait()
         if os.path.exists(self.download_directory + '/Scratch-456.0.4.air') == False:
             proc = subprocess.Popen('wget https://scratch.mit.edu/scratchr2/static/sa/Scratch-456.0.4.air -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S cp ' + self.download_directory + '/Scratch-456.0.4.air /opt/adobe-air-sdk/scratch/Scratch.air', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         if os.path.exists(self.download_directory + '/25203.png') == False:
             proc = subprocess.Popen('wget https://dl2.macupdate.com/images/icons128/25203.png -P ' + self.download_directory, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
-        proc.wait()
+            proc.wait()
         proc = subprocess.Popen('echo '+ self.psw +' | sudo -S cp ' + self.download_directory + '/25203.png /opt/adobe-air-sdk/scratch/scratch.png', shell=True, stdin=None, stdout=subprocess.PIPE, stderr=None, executable="/bin/bash")
         proc.wait()
         self.change_label(4, 'normal', 'black')
