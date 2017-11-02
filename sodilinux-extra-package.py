@@ -3,7 +3,7 @@
 '''
 @author    Antonio Faccioli <antonio.faccioli@soluzioniopen.com>
 @license   http://directory.fsf.org/wiki/License:MPLv2.0
-@version   1.3
+@version   1.3.1
 '''
 
 import tkinter as tk
@@ -21,10 +21,12 @@ class Main:
 
     def __init__ (self):
         self.main = tk.Tk()
-        self.main.title("Sodilinux Extra Package 1.3")
+        self.main.title("Sodilinux Extra Package 1.3.1")
         self.current_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
         self.header = tk.PhotoImage(file=self.current_dir + '/images/header.gif')
-
+        self.icon = tk.Image("photo", file="/usr/share/icons/sodilinux2017.png")
+        self.main.call('wm','iconphoto',self.main,self.icon)
+        
         #environment variables
         self.font = "Liberation Sans"
         self.label_text1 = "Installa"
@@ -49,7 +51,7 @@ I pulsanti si abilitano in base alla presenza o meno sul vostro PC del software 
         self.info = '''Sviluppato da Antonio Faccioli
 <antonio.faccioli@soluzioniopen.com>
 Licenza http://directory.fsf.org/wiki/License:MPLv2.0
-Versione 1.3
+Versione 1.3.1
 
 Il tool è stato finanziato da Italian Linux Society attraverso il crowdfunding.'''
 
@@ -96,7 +98,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
                                "Sto controllando la connessione",
                                "ERRORE: Connessione non presente",
                                "Sto scaricando il pacchetto selezionato",
-                               "Sto installado il pacchetto selezionato",
+                               "Sto installando il pacchetto selezionato",
                                "Procedura completata",
                                "Sto disinstallando il pacchetto",
                                "Introduzione",
@@ -104,7 +106,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
                                "Pacchetto Google Earth",
                                "Pacchetto Teamviewer",
                                "Pacchetto Skype",
-                               "Pacchetto Pdf-xchange",
+                               "Pacchetto Pdf-viewer",
                                "Pacchetto Cmaps",
                                "Pacchetto Fonts",
                                "Pacchetto Scratch",
@@ -132,7 +134,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         self.lb.insert("end", "Google Earth")
         self.lb.insert("end", "Teamviewer")
         self.lb.insert("end", "Skype")
-        self.lb.insert("end", "Pdf-xchange")
+        self.lb.insert("end", "Pdf-viewer")
         self.lb.insert("end", "Cmaps")
         self.lb.insert("end", "Fonts Microsoft")
         self.lb.insert("end", "Adobe AIR")
@@ -173,12 +175,16 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
         selection=widget.curselection()
         value = widget.get(selection[0])
         if value == "Introduzione":
+            self.button_install.configure(state='disabled')
+            self.button_uninstall.configure(state='disabled')
             self.text.config(state='normal')
             self.text.delete(1.0, "end")
             self.text.insert("end", self.intro)
             self.text.config(state='disabled')
             self.change_label(7, 'normal', 'black')
         elif value == "Informazioni":
+            self.button_install.configure(state='disabled')
+            self.button_uninstall.configure(state='disabled')
             self.text.config(state='normal')
             self.text.delete(1.0, "end")
             self.text.insert("end", self.info)
@@ -233,7 +239,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
             self.text.delete(1.0, "end")
             self.text.insert("end", self.skype)
             self.text.config(state='disabled')
-        elif value == "Pdf-xchange":
+        elif value == "Pdf-viewer":
             package = self.home[1] + "/.wine/drive_c/Program\ Files/Tracker\ Software/PDF\ Viewer/PDFXCview.exe"
             self.button_install.configure(state=self.query_package(package, "i", "path"), command=self.install_pdfxchange)
             self.button_uninstall.configure(state=self.query_package(package, "r", "path"), command=self.uninstall_pdfxchange)
@@ -338,13 +344,18 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
 
 
     def getPsw(self, message):
-        psw = askstring('Password', message, show='*')                                                                                                                            
-        return psw                                                                                 
+        psw = askstring('Password', message, show='*')
+        
+        if psw is None:
+            sys.exit()
+        else:
+            return psw
+                                                                                       
        
     def install_google(self, package, version):
         self.psw = self.getPsw("Inserisci la password per l'installazione")
-        window = self.open_window("Sto installando, attendi")
         self.check_connection()
+        window = self.open_window("Sto installando, attendi")
         self.change_state_button('disabled')
         self.change_label(3, 'normal', 'black')
         link_key = "https://dl.google.com/linux/linux_signing_key.pub"
@@ -641,12 +652,15 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
     def open_window(self, message):
         w_alert = tk.Toplevel(self.main)
         w_alert.wm_title("Attenzione")
+        icon = tk.Image("photo", file="/usr/share/icons/sodilinux2017.png")
+        w_alert.tk.call('wm','iconphoto',w_alert,icon)
         l = tk.Label(w_alert, text=message)
         l.pack(side="top", fill="both", expand=True)
         return w_alert
 
     def close_window(self, window):
         window.destroy()
+        self.main.update()
         
     def start(self):
         self.main.mainloop()
