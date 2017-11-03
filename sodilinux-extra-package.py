@@ -285,7 +285,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
             self.text.insert("end", self.adobeair)
             self.text.config(state='disabled')
         elif value == "Scratch":
-            package = "/opt/Adobe AIR/Versions/1.0/Adobe AIR Application Installer"
+            package = "/opt/adobe-air-sdk/scratch/Scratch.air"
             if self.query_arch() == "x86_64":
                 version = "scratch64"
             else:
