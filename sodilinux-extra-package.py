@@ -660,7 +660,7 @@ Scratch è caratterizzato da una programmazione con blocchi di costruzione (bloc
 
     def close_window(self, window):
         window.destroy()
-        self.main.update()
+        messagebox.showinfo("Avviso", "Operazione conclusa")
         
     def start(self):
         self.main.mainloop()
